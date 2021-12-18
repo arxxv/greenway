@@ -13,13 +13,10 @@ from flask_cors import cross_origin, CORS
 MAPS_BASE = 'https://maps.googleapis.com/maps/api/directions/json'
 POLLUTION_BASE = 'http://api.openweathermap.org/data/2.5/air_pollution?'
 
-MAPS_API_KEY = os.environ['MAPS_API_KEY']
-OPEN_WEATHER_KEY = os.environ['OPEN_WEATHER_KEY']
-CARBON_KEY = os.environ['CARBON_KEY']
-DB_KEY = os.environ['DB_KEY']
 
 
 def manage_db():
+    DB_KEY = os.environ['DB_KEY']
     endpoint = 'https://xyz.documents.azure.com:443/'
     database_name = 'greenway'
     container_users_name = 'users'
@@ -37,6 +34,8 @@ container_users = manage_db()
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
+
+MAPS_API_KEY = os.environ['MAPS_API_KEY']
 gmaps = googlemaps.Client(key=MAPS_API_KEY)
 
 
@@ -83,6 +82,9 @@ def login():
 @app.route('/getroutes', methods=["POST"])
 @cross_origin(supports_credentials=True)
 def route():
+    CARBON_KEY = os.environ['CARBON_KEY']
+    OPEN_WEATHER_KEY = os.environ['OPEN_WEATHER_KEY']
+
     input_json = request.get_json(force=True)
     orig, dest, vid = input_json['origin'], input_json['destination'], input_json['vid']
     origLat, origLong = orig[0], orig[1]
@@ -215,6 +217,8 @@ def myvehicles():
 # vehicle combustion estimate
 @app.route('/vehicleestimate', methods=["POST"])
 def vehicleestimate():
+    CARBON_KEY = os.environ['CARBON_KEY']
+    
     input_json = request.get_json(force=True)
     vid, dist, unit = str(input_json['vid']), input_json['dist'], input_json['unit']
     uri = "https://www.carboninterface.com/api/v1/estimates"
