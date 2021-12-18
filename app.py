@@ -111,7 +111,8 @@ def route():
             cnt -= 1
 
         new_route.append({"lat": destLat, "lng": destLong})
-        route_info['index'] = sum(stepsindex)//len(stepsindex) + round(random.random(), 2) - 1
+        route_info['index'] = sum(stepsindex)//len(stepsindex) + random.random() - 1
+        route_info['index'] = round(route_info['index'], 2)
         route_info['steps'] = new_route
         route_info['time'] = route['legs'][0]['duration']['text']
         route_info['dist'] = route['legs'][0]['distance']['text']
